@@ -65,7 +65,7 @@ v_dash = Ma*a_dash;
 den_dash = 0.388857; %[kg/m^3]
 q_dash = 0.5*den_dash*v_dash^2;
 
-L2D_dash = 1/(((q_dash*Cdo_d)/(WL_dash))+WL_dash*(1/(q_dash*pi*AR*e)));
+L2D_dash = L2D_cruise;
 
 %% L/D Estimate (for combat)
 n_max = 7; %Instantaneous turn rate
@@ -73,9 +73,9 @@ L2D_combat = 1/(((q_dash*Cdo_d)/(n_max*WL_dash))+WL_dash*n_max*(1/(q_dash*pi*AR*
 
 %% Start Numerical Solver
 Wg(1) = Gross_Weight;
-error(1) = 20000;
+error(1) = 100000;
 i = 1;
-while abs(error(i)) > 10
+while error(i) > 10
 
 %% Improved Empty Weight Fraction
 
@@ -106,9 +106,7 @@ Wfu(2) = (1-Wfr(2))*W(2);
 
 %Cruise - 300nm
 R1 = 300*1852; %range in meters
-if i==1
-    TSFC_cruise = TSFC_cruise/3600/2.205/4.448;
-end
+TSFC_cruise = TSFC_cruise/3600/2.205/4.448;
 Wfr(3) = exp(-(TSFC_cruise*g*R1)/(v_cruise*L2D_cruise));
 W(4) = Wfr(3)*W(3);
 Wfu(3) = (1-Wfr(3))*W(3);
@@ -125,9 +123,7 @@ W(6) = Wfr(5)*W(5);
 Wfu(5) = (1-Wfr(5))*W(5);
 
 %Dash - 100nm
-if i==1
-    TSFC_dash = TSFC_dash/3600/2.205/4.448;
-end
+TSFC_dash = TSFC_dash/3600/2.205/4.448;
 R2 = 100*1852; %range in meters
 Wfr(6) = exp(-(TSFC_dash*g*R2)/(v_dash*L2D_dash));
 W(7) = Wfr(6)*W(6);
@@ -172,21 +168,21 @@ Wf = 1.06*Wf; %additional allowance for unusable fuel
 
 
 %% Gross Weight
-Wg_calc(i) = Wp+Wf+EWF*Wg(i);
+Wg_calc = Wp+Wf+EWF*Wg(i);
 
 %% End Numerical Solver
-error(i+1) = abs(Wg_calc(i)-Wg(i));
+error(i+1) = Wg_calc-Wg(i);
 if error(i+1) < error(i)
-    Wg(i+1) = Wg(i)+0.05*abs(error(i+1));
+    Wg(i+1) = Wg(i)+0.25*abs(error(i+1));
 elseif error(i+1) > error(i)
-    Wg(i+1) = Wg(i)-0.05*abs(error(i+1));
+    Wg(i+1) = Wg(i)-0.25*abs(error(i+1));
 end
 
 i = i+1;
 end
 
-Wg_calc(end) = [];
-disp(sprintf('The gross weight converges at %d Newtons',Wg_calc(end)))
+Wg(end)
+Wg_calc
 
 %% Fuselage
 
