@@ -23,10 +23,35 @@ n_eng = 1; %number of engines being used
 TSFC = 0.6; %Thrust specific fuel consumption (british units)
     TSFC_cruise = TSFC; %change if needed
     TSFC_dash = TSFC; %change if needed
+W_eng_o = 1800*9.81; %dry weight of engine [N]
 
 %General Aerodynamics
 Cdo_c = 0.0468; %parasitic drag at cruise
 Cdo_d = 0.0493; %parasitic drag at dash speed
+
+%Fuselage
+FL_s = 16; %specified fuselage length [m]
+    FusF = 1; %fuselage factor (set to 1 if fuselage length is specified, set to 0 if it should be calculated)
+Sf_Wet = 36.1; %fuselage wetted area [m^2] - CURRENTLY THE F-35 AS AN ESTIMATE
+
+%% Import Wing Data
+Wing_Parameters = csvread("Wing_Parameters.csv");
+    S = Wing_Parameters(1);
+    b = Wing_Parameters(2);
+    C_Root = Wing_Parameters(3);
+    C_Tip = Wing_Parameters(4);
+    MAC = Wing_Parameters(5);
+    Y_MAC = Wing_Parameters(6);
+    Sw_LE = Wing_Parameters(7);
+    Sw_QC = Wing_Parameters(8);
+    TaR = Wing_Parameters(9);
+    ThR = Wing_Parameters(10);
+    AR = Wing_Parameters(11);
+    WTA = Wing_Parameters(12);
+    WIA = Wing_Parameters(13);
+    DA = Wing_Parameters(14);
+    S_VT = Wing_Parameters(15);
+    S_HT = Wing_Parameters(16);
 
 %% Improved Payload Weight Estimate
 
@@ -186,11 +211,67 @@ i = i+1;
 end
 
 Wg_calc(end) = [];
-disp(sprintf('The gross weight converges at %d Newtons',Wg_calc(end)))
+fprintf('The gross weight converges at %d Newtons\n',Wg_calc(end))
+
+%% Fuel Volume
+FD = 6.7; %fuel density [lb/gal]
+FD = FD*119.8266; %conversion: [lb/gal] --> [kg/m^3]
+FV = (Wf/g)/FD; %fuel volume [m^3]
+fprintf('The fuel volume is %d m^3\n',FV)
+
+%% Payload Volume
+
+%Government Furnished Equipment (excluding weapons)
+V_gov = 3+0.5+3+1+2+6+4+2; %[ft^3]
+if n_eng == 1
+    V_gov = V_gov - 1;
+end
+
+%Weapons
+V_missiles = pi*(0.6/2)^2*12*n_missile; %total missile volume [ft^3]
+V_cannon_int = pi*(25/12/2)^2*(25/12); %internal cannon volume [ft^3]
+V_cannon_ext = pi*(10/12/2)^2*(74/12); %external cannon volume [ft^3]
+
+%Additional Payloads
+    %Nothing for now
+
+Vp_int = V_gov+V_cannon_int; %total payload internal volume [ft^3]
+    Vp_int = Vp_int/35.315; %conversion: [ft^3] --> [m^3]
+Vp_ext = V_missiles+V_cannon_ext; %total payload external volume [ft^3]
+    Vp_ext = Vp_ext/35.315; %conversion: [ft^3] --> [m^3]
+
+%Total Volume
+fprintf('The total used internal volume is %d m^3\n',FV+Vp_int)
+fprintf('The total used external volume is %d m^3\n',Vp_ext)
 
 %% Fuselage
 
-% %Estimation Parameters (Jet Fighter)
-%     a = 0.389;
-%     c = 0.39;
-% FL = a*Wg^c;
+%Estimation Parameters (Jet Fighter)
+    a = 0.389;
+    c = 0.39;
+FL = a*Wg_calc(end)^c; 
+
+if FusF == 1
+    FL = FL_s; %set to specified length
+end
+
+%% Approximate Empty Weight Buildup
+
+%Approximate table values
+W_Wing = 44*S; %Wing mass [kg]
+W_Tail_H = 20*S_HT; %Horizontal tail mass [kg]
+W_Tail_V = 20*S_VT; %Vertical tail mass [kg]
+W_Fus = 23*Sf_Wet; %Fuselage weight [kg] - FIND Sf_Wet
+
+W_LG = 0.033*Wg_calc(end); %Landing gear weight [N]
+W_AEE = 0.17*Wg_calc(end); %"All-else empty" weight [N]
+
+W_eng_i = 1.3*W_eng_o; %Installed engine weight [N]
+
+%Total weight check
+W_tot = (W_Wing+W_Tail_H+W_Tail_V+W_Fus)*9.81 + W_LG + W_AEE + W_eng_i
+
+
+
+
+
