@@ -40,6 +40,8 @@ C_HT = 0.4; %Horizontal tail volume coefficient (jet fighter) - Historical
 C_VT = 0.1; %Vertical tail volume coefficient (jet fighter) - Historical
 AR_HT = 3; %Horizontal Tail aspect ratio (historical)
 TaR_HT = 0.24; %Horizontal Tail taper ratio (historical)
+AR_VT = 1.25; %Vertical Tail aspect ratio (historical)
+TaR_VT = 0.24; %Vertical Tail taper ratio (historical)
 
 %Tail Area
 S_VT = (C_VT*b*S)/(L_VT); %Vertical Tail Area [m^2}
@@ -49,11 +51,21 @@ S_HT = (C_HT*MAC*S)/(L_HT); %Horizontal Tail Area [m^2]
 b_HT = sqrt(AR_HT*S_HT); %span [m]
 C_Root_HT = (2*S_HT)/(b_HT*(1+TaR_HT)); %root chord [m]
 C_Tip_HT = TaR_HT*C_Root_HT; %tip chord [m]
+MAC_HT = (2/3)*((1+TaR_HT+TaR_HT^2)/(1+TaR_HT))*C_Root_HT;
+Y_MAC_HT = (b_HT/6)*((1+2*TaR_HT)/(1+TaR_HT));
+
+%Vertical Tail Calculations
+b_VT = sqrt(AR_VT*S_VT); %span [m]
+C_Root_VT = (2*S_VT)/(b_VT*(1+TaR_VT)); %root chord [m]
+C_Tip_VT = TaR_VT*C_Root_VT; %tip chord [m]
+MAC_VT = (2/3)*((1+TaR_VT+TaR_VT^2)/(1+TaR_VT))*C_Root_VT;
+Y_MAC_VT = (b_VT/6)*((1+2*TaR_VT)/(1+TaR_VT));
+
 
 %% Table
-Parameter_Name = {'Reference wing area [m^2]';'Span [m]';'Root chord [m]'; 'Tip chord [m]'; 'Mean aerodynamic chord'; 'MAC spanwise location';'Leading edge sweep angle [deg]'; 'Quarter chord sweep angle [deg]'; 'Taper ratio'; 'Thickness ratio'; 'Aspect ratio'; 'Twist angle [deg]'; 'Wing incidence angle [deg]'; 'Dihedral angle [deg]';'Vertical Tail Area [m^2]';'Horizontal Tail Area [m^2]'; 'Horizontal Tail Span [m]'; 'Horizontal Tail Root Chord [m]'; 'Horizontal Tail Tip Chord [m]'; 'Horizontal Tail Aspect Ratio'; 'Horizontal Tail Taper Ratio'};
-Parameter_Symbol = {'S';'b';'C_root'; 'C_tip'; 'MAC'; 'Y'; 'Lambda_LE'; 'Lambda_c/4'; 'lambda'; 't/c'; 'AR'; 'theta'; 'i'; 'gamma';'S_VT';'S_HT';'b_tail'; 'C_root,Htail'; 'C_tip,Htail';'AR_HT';'lambda_HT'};
-Parameter_Value = [S;b;C_Root;C_Tip;MAC;Y_MAC;Sw_LE;Sw_QC;TaR;ThR;AR;WTA;WIA;DA;S_VT;S_HT;b_HT;C_Root_HT;C_Tip_HT;AR_HT;TaR_HT];
+Parameter_Name = {'Reference wing area [m^2]';'Span [m]';'Root chord [m]'; 'Tip chord [m]'; 'Mean aerodynamic chord'; 'MAC spanwise location';'Leading edge sweep angle [deg]'; 'Quarter chord sweep angle [deg]'; 'Taper ratio'; 'Thickness ratio'; 'Aspect ratio'; 'Twist angle [deg]'; 'Wing incidence angle [deg]'; 'Dihedral angle [deg]';'Vertical Tail Area [m^2]';'Horizontal Tail Area [m^2]'; 'Horizontal Tail Span [m]'; 'Horizontal Tail Root Chord [m]'; 'Horizontal Tail Tip Chord [m]'; 'Horizontal Tail Aspect Ratio'; 'Horizontal Tail Taper Ratio'; 'MAC (Horizontal Tail)'; 'MAC (Horizontal Tail) Spanwise Location';'MAC (Vertical Tail)'; 'MAC (Vertical Tail) Spanwise Location'};
+Parameter_Symbol = {'S';'b';'C_root'; 'C_tip'; 'MAC'; 'Y'; 'Lambda_LE'; 'Lambda_c/4'; 'lambda'; 't/c'; 'AR'; 'theta'; 'i'; 'gamma';'S_VT';'S_HT';'b_tail'; 'C_root,Htail'; 'C_tip,Htail';'AR_HT';'lambda_HT';'MAC_HT';'Y_HT';'MAC_VT';'Y_VT'};
+Parameter_Value = [S;b;C_Root;C_Tip;MAC;Y_MAC;Sw_LE;Sw_QC;TaR;ThR;AR;WTA;WIA;DA;S_VT;S_HT;b_HT;C_Root_HT;C_Tip_HT;AR_HT;TaR_HT;MAC_HT;Y_MAC_HT;MAC_VT;Y_MAC_VT];
 
 Column_Name = {'Parameter Name'; 'Symbol'; 'Value'};
 
