@@ -20,10 +20,10 @@ n_missile = 4; %number of missiles
 
 %General propulsion
 n_eng = 2; %number of engines being used
-TSFC = 0.71; %Thrust specific fuel consumption (british units)
+TSFC = 0.841; %Thrust specific fuel consumption (british units)
     TSFC_cruise = TSFC; %change if needed
     TSFC_dash = TSFC; %change if needed
-W_eng_o = 9804*2; %dry weight of engine [N]
+W_eng_o = 10898*2; %dry weight of engine [N]
 
 %General Aerodynamics
 Cdo_c = 0.0468; %parasitic drag at cruise
@@ -39,12 +39,12 @@ Sf_Wet = 36.1; %fuselage wetted area [m^2] - CURRENTLY THE F-35 AS AN ESTIMATE
 
 %Positioning (from front of Fuselage) - [%]
 X_MW = 0.3; %Leading edge of main wing
-X_HT = 0.8; %Leading edge of horizontal tail wing
-X_VT = 0.8; %Leading edge of vertical tail wing
+X_HT = 0.; %Leading edge of horizontal tail wing
+X_VT = 13.31/16.5; %Leading edge of vertical tail wing
 CG_MW = 0.3650; %Main wing CG
-CG_HW = 0.8832; %Horizontal wing CG
-CG_VW = 0.8864; %Vertical wing CG
-CG_FU = 0.55; %Fuselage CG
+CG_HW = 13.73/16.5; %Horizontal wing CG
+CG_VW = 13.73/16.5; %Vertical wing CG
+CG_FU = 0.6; %Fuselage CG
 CG_EN = 0.7; %Engine CG
 CG_LG = 0.65; %Landing Gear CG
 

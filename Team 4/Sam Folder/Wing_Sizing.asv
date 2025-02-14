@@ -40,7 +40,7 @@ C_HT = 0.4; %Horizontal tail volume coefficient (jet fighter) - Historical
 C_VT = 0.12; %Vertical tail volume coefficient (jet fighter) - Historical
 AR_HT = 2; %Horizontal Tail aspect ratio (historical)
 TaR_HT = 0.24; %Horizontal Tail taper ratio (historical)
-AR_VT = 2; %Vertical Tail aspect ratio (historical)
+AR_VT = 1.25; %Vertical Tail aspect ratio (historical)
 TaR_VT = 0.24; %Vertical Tail taper ratio (historical)
 
 %Tail Area
