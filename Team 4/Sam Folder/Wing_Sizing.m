@@ -3,7 +3,7 @@ clear all; close all; clc;
 %% Adjustable Parameters
 
 %General Sizing
-Wg = 83455; %gross weight [N]
+Wg = 122917.9; %gross weight [N]
 WL = 3640; %wing loading [N/m^2]
 Ma = 1.6; %design mach number
 L_Fus = 16.5; %fuselage length [m]
@@ -63,9 +63,9 @@ Y_MAC_VT = (b_VT/6)*((1+2*TaR_VT)/(1+TaR_VT));
 
 
 %% Table
-Parameter_Name = {'Reference wing area [m^2]';'Span [m]';'Root chord [m]'; 'Tip chord [m]'; 'Mean aerodynamic chord'; 'MAC spanwise location';'Leading edge sweep angle [deg]'; 'Quarter chord sweep angle [deg]'; 'Taper ratio'; 'Thickness ratio'; 'Aspect ratio'; 'Twist angle [deg]'; 'Wing incidence angle [deg]'; 'Dihedral angle [deg]';'Vertical Tail Area [m^2]';'Horizontal Tail Area [m^2]'; 'Horizontal Tail Span [m]'; 'Horizontal Tail Root Chord [m]'; 'Horizontal Tail Tip Chord [m]'; 'Horizontal Tail Aspect Ratio'; 'Horizontal Tail Taper Ratio'; 'MAC (Horizontal Tail)'; 'MAC (Horizontal Tail) Spanwise Location';'MAC (Vertical Tail)'; 'MAC (Vertical Tail) Spanwise Location'};
-Parameter_Symbol = {'S';'b';'C_root'; 'C_tip'; 'MAC'; 'Y'; 'Lambda_LE'; 'Lambda_c/4'; 'lambda'; 't/c'; 'AR'; 'theta'; 'i'; 'gamma';'S_VT';'S_HT';'b_tail'; 'C_root,Htail'; 'C_tip,Htail';'AR_HT';'lambda_HT';'MAC_HT';'Y_HT';'MAC_VT';'Y_VT'};
-Parameter_Value = [S;b;C_Root;C_Tip;MAC;Y_MAC;Sw_LE;Sw_QC;TaR;ThR;AR;WTA;WIA;DA;S_VT;S_HT;b_HT;C_Root_HT;C_Tip_HT;AR_HT;TaR_HT;MAC_HT;Y_MAC_HT;MAC_VT;Y_MAC_VT];
+Parameter_Name = {'Reference wing area [m^2]';'Span [m]';'Root chord [m]'; 'Tip chord [m]'; 'Mean aerodynamic chord'; 'MAC spanwise location';'Leading edge sweep angle [deg]'; 'Quarter chord sweep angle [deg]'; 'Taper ratio'; 'Thickness ratio'; 'Aspect ratio'; 'Twist angle [deg]'; 'Wing incidence angle [deg]'; 'Dihedral angle [deg]';'Vertical Tail Area [m^2]';'Horizontal Tail Area [m^2]'; 'Horizontal Tail Span [m]'; 'Horizontal Tail Root Chord [m]'; 'Horizontal Tail Tip Chord [m]'; 'Horizontal Tail Aspect Ratio'; 'Horizontal Tail Taper Ratio'; 'MAC (Horizontal Tail)'; 'MAC (Horizontal Tail) Spanwise Location';'MAC (Vertical Tail)'; 'MAC (Vertical Tail) Spanwise Location';'Vertical Tail Span [m]'; 'Vertical Tail Root Chord [m]'; 'Vertical Tail Tip Chord [m]'; 'Vertical Tail Aspect Ratio'; 'Vertical Tail Taper Ratio'};
+Parameter_Symbol = {'S';'b';'C_root'; 'C_tip'; 'MAC'; 'Y'; 'Lambda_LE'; 'Lambda_c/4'; 'lambda'; 't/c'; 'AR'; 'theta'; 'i'; 'gamma';'S_VT';'S_HT';'b_H_tail'; 'C_root,Htail'; 'C_tip,Htail';'AR_HT';'lambda_HT';'MAC_HT';'Y_HT';'MAC_VT';'Y_VT';'b_V_tail'; 'C_root,Vtail'; 'C_tip,Vtail';'AR_VT';'lambda_VT'};
+Parameter_Value = [S;b;C_Root;C_Tip;MAC;Y_MAC;Sw_LE;Sw_QC;TaR;ThR;AR;WTA;WIA;DA;S_VT;S_HT;b_HT;C_Root_HT;C_Tip_HT;AR_HT;TaR_HT;MAC_HT;Y_MAC_HT;MAC_VT;Y_MAC_VT;b_VT;C_Root_VT;C_Tip_VT;AR_VT;TaR_VT];
 
 Column_Name = {'Parameter Name'; 'Symbol'; 'Value'};
 
