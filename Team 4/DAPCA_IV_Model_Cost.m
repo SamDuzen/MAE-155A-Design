@@ -112,8 +112,6 @@ costTable = table(Cd_mks, Ht_mks, Cm_mks, Hm_mks, HQ, Cf_mks, Ceng_mks, Cavionic
 % Display the table
 disp(costTable)
 
-%% INSERT NEW STUFF HERE
-
 
 
 
@@ -161,9 +159,6 @@ disp(['Break-even Quantity: ', num2str(break_even_quantity)])
 
 
 %% Visualization
-
-% You can use MATLAB's plotting functions to visualize your results. 
-% For example, you can plot the production costs over time or the cumulative lifecycle costs.
 
 figure;
 plot(production_quantities, production_cost);
