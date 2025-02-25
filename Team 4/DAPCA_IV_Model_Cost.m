@@ -111,3 +111,62 @@ costTable = table(Cd_mks, Ht_mks, Cm_mks, Hm_mks, HQ, Cf_mks, Ceng_mks, Cavionic
 
 % Display the table
 disp(costTable)
+
+%% INSERT NEW STUFF HERE
+
+
+
+
+%% PRODUCTION COST 
+
+% define production quantities for each year
+production_quantities = [1, 2, 3, 4, 5]; % FIX
+learning_rate = 0.8; % 80% learning curve means 20% cost reduction per doubling of production)
+
+% calculate production cost for each year using the learning curve
+for i = 1:length(production_quantities)
+  production_cost(i) = Cm_mks * production_quantities(i)^(log10(learning_rate)/log10(2));
+end
+
+%% OPERATION AND SUPPORT COSTS (???) MAYBE GET RID OF 
+
+% Define annual operating and support costs
+annual_operating_costs = [5, 5, 5, 5, 5]; % Example costs - adjust as needed
+annual_support_costs = [2, 2, 2, 2, 2]; % Example costs - adjust as needed
+
+% Calculate total operating and support costs
+total_operating_costs = sum(annual_operating_costs);
+total_support_costs = sum(annual_support_costs);
+
+%% TOTAL LIFE CYCLE
+
+total_lifecycle_cost = RDTandE_flyaway + sum(production_cost) + total_operating_costs + total_support_costs;
+
+%% BREAK EVEN ANALYSIS 
+
+% Define selling price per unit
+selling_price = 1000000; % Example price - adjust as needed
+
+% Calculate break-even quantity
+break_even_quantity = (RDTandE_flyaway + total_operating_costs + total_support_costs) / (selling_price - Cm_mks);
+
+%% Display Results
+
+costTable = table(RDTandE_flyaway, production_cost, total_operating_costs, total_support_costs, total_lifecycle_cost, ...
+    'VariableNames', { 'RDT&E + Flyaway Cost', 'Production Costs', 'Operating Costs', 'Support Costs', 'Total Lifecycle Cost' });
+
+disp(costTable)
+disp(['Break-even Quantity: ', num2str(break_even_quantity)])
+
+
+
+%% Visualization
+
+% You can use MATLAB's plotting functions to visualize your results. 
+% For example, you can plot the production costs over time or the cumulative lifecycle costs.
+
+figure;
+plot(production_quantities, production_cost);
+xlabel('Production Quantity');
+ylabel('Production Cost');
+title('Production Cost vs. Quantity');
