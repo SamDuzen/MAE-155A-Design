@@ -3,7 +3,7 @@ clear all; close all; clc;
 %% Adjustable Parameters
 
 %General Sizing
-Wg = 83455; %gross weight [N]
+Wg = 122917.9; %gross weight [N]
 WL = 3640; %wing loading [N/m^2]
 Ma = 1.6; %design mach number
 L_Fus = 16.5; %fuselage length [m]
