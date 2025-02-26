@@ -38,10 +38,10 @@ FL_s = 16.5; %specified fuselage length [m]
 Sf_Wet = 36.1; %fuselage wetted area [m^2] - CURRENTLY THE F-35 AS AN ESTIMATE
 
 %Positioning (from front of Fuselage) - [%]
-X_MW = 0.3; %Leading edge of main wing
+X_MW = 0.25; %Leading edge of main wing
 X_HT = 0.8; %Leading edge of horizontal tail wing
 X_VT = 0.8; %Leading edge of vertical tail wing
-CG_MW = 0.3650; %Main wing CG
+CG_MW = 0.4471; %Main wing CG
 CG_HW = 0.8832; %Horizontal wing CG
 CG_VW = 0.8864; %Vertical wing CG
 CG_FU = 0.55; %Fuselage CG
@@ -306,18 +306,18 @@ dX_AC_Super = 0.112 - 0.004*Ma; %M>1.1
 
 %Main Wing
 X_MAC_QC_MW = X_MW*FL + Y_MAC*tand(Sw_LE) + MAC/4; %Quarter chord of MAC from front of aircraft
-    X_AC_MW_Sub = X_MAC_QC_MW + dX_AC_Sub*sqrt(S) %Subsonic
-    X_AC_MW_Super = X_MAC_QC_MW + dX_AC_Super*sqrt(S) %Supersonic
+    X_AC_MW_Sub = X_MAC_QC_MW + dX_AC_Sub*sqrt(S); %Subsonic
+    X_AC_MW_Super = X_MAC_QC_MW + dX_AC_Super*sqrt(S); %Supersonic
 
 %Horizontal Tail Wing
 X_MAC_QC_HT = X_HT*FL + Y_MAC_HT*tand(Sw_LE) + MAC_HT/4; %Quarter chord of MAC from front of aircraft
-    X_AC_HT_Sub = X_MAC_QC_HT + dX_AC_Sub*sqrt(S_HT) %Subsonic
-    X_AC_HT_Super = X_MAC_QC_HT + dX_AC_Super*sqrt(S_HT) %Supersonic
+    X_AC_HT_Sub = X_MAC_QC_HT + dX_AC_Sub*sqrt(S_HT); %Subsonic
+    X_AC_HT_Super = X_MAC_QC_HT + dX_AC_Super*sqrt(S_HT); %Supersonic
 
 %Verticle Tail Wing
 X_MAC_QC_VT = X_VT*FL + Y_MAC_VT*tand(Sw_LE) + MAC_VT/4; %Quarter chord of MAC from front of aircraft
-    X_AC_VT_Sub = X_MAC_QC_VT + dX_AC_Sub*sqrt(S_VT) %Subsonic
-    X_AC_VT_Super = X_MAC_QC_VT + dX_AC_Super*sqrt(S_VT) %Supersonic
+    X_AC_VT_Sub = X_MAC_QC_VT + dX_AC_Sub*sqrt(S_VT); %Subsonic
+    X_AC_VT_Super = X_MAC_QC_VT + dX_AC_Super*sqrt(S_VT); %Supersonic
 
 %% Neutral Point
 
