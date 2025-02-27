@@ -8,7 +8,7 @@ V_mps = Mach_max * speed_of_sound_mps; % maximum velocity in m/s
 V_kmh = V_mps * 3.6; % convert to km/h
 V = V_kmh; % maximum velocity [km/h]
 
-Q = 5; % production quantity
+Q = 1000; % production quantity
 FTA = 4; % number of flight-test aircraft
 Neng = 2; % number of engines per aircraft
 
