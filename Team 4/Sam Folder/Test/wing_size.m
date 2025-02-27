@@ -1,10 +1,9 @@
-clear all; close all; clc;
+function [Wing_Table,S,b,C_Root,C_Tip,MAC,Y_MAC,Sw_LE,Sw_QC,TaR,ThR,AR,WTA,WIA,DA,S_VT,S_HT,b_HT,C_Root_HT,C_Tip_HT,AR_HT,TaR_HT,MAC_HT,Y_MAC_HT,MAC_VT,Y_MAC_VT,b_VT,C_Root_VT,C_Tip_VT,AR_VT,TaR_VT] = wing_size(Wg)
+
 
 %% Adjustable Parameters
 
 %General Sizing
-Wg = 122917.9; %gross weight [N]
-%Wg = 122917.9; %gross weight [N]
 WL = 3640; %wing loading [N/m^2]
 Ma = 1.6; %design mach number
 L_Fus = 16.5; %fuselage length [m]
@@ -70,7 +69,10 @@ Parameter_Value = [S;b;C_Root;C_Tip;MAC;Y_MAC;Sw_LE;Sw_QC;TaR;ThR;AR;WTA;WIA;DA;
 
 Column_Name = {'Parameter Name'; 'Symbol'; 'Value'};
 
-Wing_Table = table(Parameter_Name, Parameter_Symbol, Parameter_Value,'VariableNames',Column_Name)
+Wing_Table = table(Parameter_Name, Parameter_Symbol, Parameter_Value,'VariableNames',Column_Name);
 
 %% Export Data
 writematrix(Parameter_Value,'Wing_Parameters.csv')
+
+
+end
