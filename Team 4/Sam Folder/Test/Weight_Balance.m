@@ -118,10 +118,10 @@ NP_Super = abs(X_NP_Super-X_MAC_MW)/MAC;
 %% Static Margin
 
 %Subsonic
-SM_Sub = (X_NP_Sub-X_CG*FL)/MAC
+SM_Sub = (X_NP_Sub-X_CG*FL)/MAC;
 
 %Supersonic
-SM_Super = (X_NP_Super-X_CG*FL)/MAC
+SM_Super = (X_NP_Super-X_CG*FL)/MAC;
 
 
 end
