@@ -167,12 +167,13 @@ disp(['Break-even Quantity: ', num2str(break_even_quantity)])
 
 figure;
 hold on
-plot(production_quantities, production_cost8);
-plot(production_quantities, production_cost9);
 plot(production_quantities, production_cost95);
+plot(production_quantities, production_cost9);
+plot(production_quantities, production_cost8);
 plot(production_quantities, production_cost7);
 plot(production_quantities, production_cost6);
 xlabel('Production Quantity');
 ylabel('Production Cost');
-legend('80% Learning Rate','90% Learning Rate','95% Learning Rate','80% Learning Rate','80% Learning Rate')
+legend('95% Learning Rate', '90% Learning Rate', '80% Learning Rate','70% Learning Rate','60% Learning Rate')
+grid on
 title('Production Cost vs. Quantity');

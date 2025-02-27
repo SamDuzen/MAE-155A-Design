@@ -8,7 +8,7 @@ V_mps = Mach_max * speed_of_sound_mps; % maximum velocity in m/s
 V_kmh = V_mps * 3.6; % convert to km/h
 V = V_kmh; % maximum velocity [km/h]
 
-Q = 1000; % production quantity
+Q = 150*5; % expected production quantity in five years 
 FTA = 2; % number of flight-test aircraft
 Neng = 2; % number of engines per aircraft
 
@@ -18,7 +18,7 @@ Tmax = Tmax_kN; % engine maximum thrust [kN]
 
 T_turbine_inlet = 1.6; % turbine inlet mach number
 T_max_turbine_inlet = 1800; % turbine inlet temperature [K]
-Cavionics = 321239.12; % avionics cost [dollars]
+Cavionics = 1140400; % avionics cost [dollars] (From AIAA document, avionics payload costs)
 
 
 % choose the material and corresponding fudge factor
@@ -83,7 +83,7 @@ Ceng_fps = 3112/9.0667*Tmax + 243.25*max(1,T_turbine_inlet) + 0.9697*T_max_turbi
 
 % engine production cost (mks units)
 Ceng_mks = 3112/9.666*Tmax + 243.25*max(1,T_turbine_inlet) + 1.747*T_max_turbine_inlet -2228;
-Ceng_mks = 245000000/59; 
+Ceng_mks = 245000000/59; %59 Ej200 engines were sold to the Spanish Air force for 245 Million dollars in Dec 24
 
 %% fudge factor to relevant cost components
 Cd_mks = Cd_mks * fudge_factor; % development Support Cost
@@ -92,14 +92,18 @@ Cm_mks = Cm_mks * fudge_factor; % manufacturing Materials Cost
 
 %% TOTAL 
 
-% hourly wrap rates in 2012
-Re = 115;
-Rt = 118;
-Rq = 108;
-Rm = 98;
+% hourly wrap rates in 2024 (Converted from 2012)
+Re = 157.12;
+Rt = 161.22;
+Rq = 147.56;
+Rm = 133.9;
 
 % total rdt&e + flyaway cost (using mks units)
-RDTandE_flyaway = Cd_mks + Ht_mks*Rt + Cm_mks + Hm_mks*Rm + HQ*Rq + Cf_mks + Ceng_mks + Cavionics + He_mks*Re;
+RDTandE_flyaway = Cd_mks + Ht_mks*Rt + Cm_mks + Hm_mks*Rm + HQ*Rq + Cf_mks + 2*Ceng_mks + Cavionics + He_mks*Re;
+
+%Flyaway cost 
+C_flyaway = Ht_mks*Rt + Cm_mks + Hm_mks*Rm + Ceng_mks + Cavionics;
+
 
 % display the results
 disp(['Total RDT&E + Flyaway Cost: ', num2str(RDTandE_flyaway)]);
@@ -134,8 +138,8 @@ end
 %% OPERATION AND SUPPORT COSTS (???) MAYBE GET RID OF 
 
 % Define annual operating and support costs
-annual_operating_costs = [5, 5, 5, 5, 5]; % Example costs - adjust as needed
-annual_support_costs = [2, 2, 2, 2, 2]; % Example costs - adjust as needed
+annual_operating_costs = 1000000; % Example costs - adjust as needed
+annual_support_costs = 5000000; % Example costs - adjust as needed
 
 % Calculate total operating and support costs
 total_operating_costs = sum(annual_operating_costs);
@@ -143,19 +147,19 @@ total_support_costs = sum(annual_support_costs);
 
 %% TOTAL LIFE CYCLE
 
-total_lifecycle_cost = RDTandE_flyaway + sum(production_cost8) + total_operating_costs + total_support_costs;
+total_lifecycle_cost = RDTandE_flyaway + sum(production_cost8(1000)) + total_operating_costs + total_support_costs;
 
 %% BREAK EVEN ANALYSIS 
 
 % Define selling price per unit
-selling_price = 1000000; % Example price - adjust as needed
+selling_price = 25000000; % Example price - adjust as needed
 
 % Calculate break-even quantity
-break_even_quantity = (RDTandE_flyaway + total_operating_costs + total_support_costs) / (selling_price - Cm_mks);
+break_even_quantity = (RDTandE_flyaway + total_operating_costs + total_support_costs) / abs((selling_price - Cm_mks/1000));
 
 %% Display Results
 
-costTable = table(RDTandE_flyaway, production_cost8, total_operating_costs, total_support_costs, total_lifecycle_cost, ...
+costTable = table(RDTandE_flyaway, production_cost8(1000), total_operating_costs, total_support_costs, total_lifecycle_cost, ...
     'VariableNames', { 'RDT&E + Flyaway Cost', 'Production Costs', 'Operating Costs', 'Support Costs', 'Total Lifecycle Cost' });
 
 disp(costTable)
