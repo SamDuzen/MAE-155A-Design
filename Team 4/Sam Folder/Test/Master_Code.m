@@ -42,7 +42,7 @@ Ma_test = 0.9;
 [L2D_cruise,L2D_dash,L2D_combat,v_cruise,v_dash,a_dash] = L2D(Ma_cruise,Cdo_c,Cdo_d,WL_Cruise,WL_dash,AR,e,e_combat,n_max);
 
 %Run gross weight estimation function
-[Wg_calc,EWF,Wf] = gross_weight(n_missile,n_eng,AR,T2W,WL,TSFC_cruise,TSFC_dash,L2D_cruise,L2D_dash,Ma_cruise,v_cruise,v_dash,a_dash,n_max,T2W_dash);
+[Wg_calc,EWF,Wf,Flight_Time] = gross_weight(n_missile,n_eng,AR,T2W,WL,TSFC_cruise,TSFC_dash,L2D_cruise,L2D_dash,Ma_cruise,v_cruise,v_dash,a_dash,n_max,T2W_dash);
     Wg = Wg_calc(end); %Save last vector entry as converged gross weight
 
 %Run weight balance function

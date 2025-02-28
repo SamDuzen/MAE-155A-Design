@@ -51,6 +51,15 @@ FF_General = 1.2; %General fudge factor for the DAPCA model for a more modern ai
 % engineering hours (mks units)
 He_mks = 5.18 * We^0.777 * V^0.894 * Q^0.163;
 
+J = 1;
+for L = 1:1000
+    He_mkst = 5.18 * We^0.777 * V^0.894 * L^0.163;
+    
+end
+
+figure()
+plot(L,He_mkst)
+
 % tooling hours (mks units)
 Ht_mks = 7.22 * We^0.777 * V^0.696 * Q^0.263;
 
@@ -70,7 +79,7 @@ Cf_mks = 1947 * We^0.325 * V^0.822 * FTA^1.21;
 Cm_mks = 31.2 * We^0.921 * V^0.621 * Q^0.799;
 
 % engine production cost (mks units)
-Ceng_mks = (245000000/59)*Q; %59 Ej200 engines were sold to the Spanish Air force for 245 Million dollars in Dec 24
+Ceng_mks = (245000000/59)*Q*Neng; %59 Ej200 engines were sold to the Spanish Air force for 245 Million dollars in Dec 24
 
 %% fudge factor to relevant cost components
 Cd_mks = Cd_mks * fudge_factor; % development Support Cost
@@ -123,9 +132,10 @@ summaryTable = table(RDTandE_flyaway, Operating_Yearly, Operating_Total, total_l
 operatingTable = table(Fuel_Total, Crew_Total, Maintenance_Total, Operating_Yearly, Operating_Total, ...
     'VariableNames', { 'Yearly Fuel Costs', 'Yearly Crew Costs', 'Yearly Maintenance Costs','Yearly Operating Costs','Lifetime Operating Costs' });
 
-RDTable = table(He_mks*Re,Ht_mks*Rt,HQ*Rq,Hm_mks*Rm,Cd_mks,Cf_mks,Cm_mks ...
-    'VariableNames', { 'Engineering Costs [Total]','Tooling Costs [Total]','Quality Control Costs [Total]','Manufacturing Costs [Total]','Development Support Cost','Flight Tests Cost','Manufacturing Materials Cost' });
+RDTable = table(He_mks*Re,Ht_mks*Rt,HQ*Rq,Hm_mks*Rm,Cd_mks,Cf_mks,Cm_mks,Ceng_mks, ...
+    'VariableNames', { 'Engineering Costs [Total]','Tooling Costs [Total]','Quality Control Costs [Total]','Manufacturing Costs [Total]','Development Support Cost','Flight Tests Cost','Manufacturing Materials Cost','Engines Cost' });
 
 disp(summaryTable)
 disp(operatingTable)
+disp(RDTable)
 

@@ -4,7 +4,7 @@ We = 2455.8; % empty weight [kg] ---> added up all of empty weights to and divid
 
 YOO = 10; %Years of Operations
 
-FT = 6; %Flight time [hours]
+FT = 6.0284; %Flight time [hours]
 Wf = 83536; %Fuel weight [N]
 Fuel_Price = 711; %Price of JP-8 fuel per metric ton (1000kg) in USD (as of Feb 28, 2025)
 
