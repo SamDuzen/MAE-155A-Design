@@ -1,4 +1,4 @@
-function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM] = Weight_Balance(Wg,Ma_cruise)
+function [CG,NP_Sub,NP_Super,SM_Sub,SM_Super] = Weight_Balance(Wg,Ma_cruise)
 
 %% Global Parameters
 Ma = 1.6; %Design Mach Number
@@ -83,7 +83,7 @@ CG_Payload = CG_Payload/FL; %Nondimensionalize
 W_Payload = W_ICNIA + W_DataBus + W_INEWS + W_VMS + W_IRSTS + W_AAR + W_ES + W_APU;
 
 %% Weapons
-X_Gun = 0.4;
+X_Gun = 0.5;
 W_Gun = (300+275)*4.44822;
 
 X_Missiles = CG_MW;
@@ -115,8 +115,7 @@ W_tot = (W_Wing+W_Tail_H+W_Tail_V+W_Fus)*9.81 + W_LG + W_AEE + W_eng_i;
 
 CG_Empty = (9.81*(W_Wing*CG_MW + W_Tail_H*CG_HW + W_Tail_V*CG_VW + W_Fus*CG_FU)+W_LG*CG_LG+W_eng_i*CG_EN+W_AEE*0.5)/(W_tot);
 
-X_CG_WM = (W_Payload*CG_Payload + W_Weapons_WM*CG_Weapons_WM + W_tot*CG_Empty)/(W_Payload + W_Weapons_WM + W_tot); %overall CG with missiles
-X_CG_NM = (W_Payload*CG_Payload + W_Weapons_NM*CG_Weapons_NM + W_tot*CG_Empty)/(W_Payload + W_Weapons_NM + W_tot); %overall CG without missiles
+X_CG_WM = (W_Payload*CG_Payload + W_Weapons_WM*CG_Weapons_ + W_tot*CG_Empty)/(W_Payload + W_Weapons_WM + W_tot); %overall CG
 
 %% Aerodynamic Center
 
@@ -155,8 +154,7 @@ X_MAC_HT = X_HT*FL + Y_MAC_HT*tand(Sw_LE);
 X_MAC_VT = X_VT*FL + Y_MAC_VT*tand(Sw_LE);
 
 %Center of Gravity
-CG_WM = abs(X_CG_WM*FL-X_MAC_MW)/MAC;
-CG_NM = abs(X_CG_NM*FL-X_MAC_MW)/MAC;
+CG = abs(X_CG_WM*FL-X_MAC_MW)/MAC;
 
 %Neutral Point - Subsonic
 NP_Sub = abs(X_NP_Sub-X_MAC_MW)/MAC;
@@ -167,12 +165,10 @@ NP_Super = abs(X_NP_Super-X_MAC_MW)/MAC;
 %% Static Margin
 
 %Subsonic
-SM_Sub_WM = (X_NP_Sub-X_CG_WM*FL)/MAC; %with missiles
-SM_Sub_NM = (X_NP_Sub-X_CG_NM*FL)/MAC; %without missiles
+SM_Sub = (X_NP_Sub-X_CG_WM*FL)/MAC;
 
 %Supersonic
-SM_Super_WM = (X_NP_Super-X_CG_WM*FL)/MAC; %with missiles
-SM_Super_NM = (X_NP_Super-X_CG_NM*FL)/MAC; %without missiles
+SM_Super = (X_NP_Super-X_CG_WM*FL)/MAC;
 
 
 end

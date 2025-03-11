@@ -2,7 +2,7 @@ clear;close all;clc;
 %% define input parameters
 We = 2455.8; % empty weight [kg] ---> added up all of empty weights to and divided it by 9.81 m/s^2 to get kg 
 
-YOO = 10; %Years of Operations
+YOO = 20; %Years of Operations
 
 FT = 6.0284; %Flight time [hours]
 Wf = 83536; %Fuel weight [N]
@@ -44,6 +44,15 @@ switch material
         error('Invalid material selected. Please choose from Aluminum, Graphite-epoxy, Fiberglass, Steel, or Titanium.');
 end
 
+%% Government Furnished Equipment Costs
+if Neng == 1
+    GFSys = 40;
+end
+if Neng == 2
+    GFSys = 50;
+end
+GFEC = 1000*(200+10+500+200+300+1000+50+50); %Government equipment cost per aircraft is 2005 USD
+GFEC_M = 1.63*GFEC; %Government equipment cost per aircraft in 2025 USD
 %% DAPCA IV Cost Model
 
 FF_General = 1.2; %General fudge factor for the DAPCA model for a more modern aircraft
@@ -86,7 +95,7 @@ Rq = 147.56;
 Rm = 133.9;
 
 % total rdt&e + flyaway cost (using mks units)
-RDTandE_flyaway = FF_General*(Cd_mks + Ht_mks*Rt + Cm_mks + Hm_mks*Rm + HQ*Rq + Cf_mks + 2*Ceng_mks + Cavionics + He_mks*Re);
+RDTandE_flyaway = GFEC_M*Q+FF_General*(Cd_mks + Ht_mks*Rt + Cm_mks + Hm_mks*Rm + HQ*Rq + Cf_mks + 2*Ceng_mks + Cavionics + He_mks*Re);
 
 %% OPERATION AND SUPPORT COSTS (???) MAYBE GET RID OF 
 
@@ -108,7 +117,23 @@ MMHPY = MMHPFH*FHPY; %Maintance Man Hours Per Year (per aircraft)
     Maintenance_Total = 2*MMHPY*Rm*Q; %Cost per year for maintance of all produced aircrafts
 
 Operating_Yearly = Fuel_Total+Crew_Total+Maintenance_Total; %Operating costs per year
+Operating_Hourly = (FPH/9.81)*(Fuel_Price/1000) + (CC*CN*CR)/365/24 + MMHPFH*2*Rm;
 Operating_Total = Operating_Yearly*YOO; %Lifetime operating costs
+
+for i = 5:50
+    YIS(i-4) = i; %Years in service
+    Op_Cost(i-4) = Operating_Yearly*i;
+    LTC(i-4) = Op_Cost(i-4) + RDTandE_flyaway;
+end
+
+figure()
+hold on
+plot(YIS,Op_Cost/1000000000)
+plot(YIS,LTC/1000000000)
+xlabel('Years in Service')
+ylabel('Cost (Billions of USD)')
+legend('Operating Cost','Total Lifetime Cost')
+grid on
 
 %% TOTAL LIFE CYCLE
 
