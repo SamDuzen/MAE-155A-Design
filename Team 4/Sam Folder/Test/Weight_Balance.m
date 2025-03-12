@@ -1,4 +1,4 @@
-function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM] = Weight_Balance(Wg,Ma_cruise)
+function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf)
 
 %% Global Parameters
 Ma = 1.6; %Design Mach Number
@@ -173,6 +173,67 @@ SM_Sub_NM = (X_NP_Sub-X_CG_NM*FL)/MAC; %without missiles
 %Supersonic
 SM_Super_WM = (X_NP_Super-X_CG_WM*FL)/MAC; %with missiles
 SM_Super_NM = (X_NP_Super-X_CG_NM*FL)/MAC; %without missiles
+
+%% Sensitivity Study (fuel weight)
+
+Left_Bound_Input = 0.3; %[m]
+    Left_Bound = Left_Bound_Input/FL; %Convert to percentage
+Right_Bound_Input = 0.2; %[m]
+    Right_Bound = Right_Bound_Input/FL; %Convert to percentage
+Steps = 1000;
+
+W_Overall_WM = W_Payload + W_Weapons_WM + W_tot;
+W_Overall_NM = W_Payload + W_Weapons_NM + W_tot;
+d(1) = -Left_Bound;
+d_display(1) = -Left_Bound_Input;
+placeholder1 = 0;
+placeholder2 = 0;
+for i = 1:Steps
+    %Find Fuel CG
+        CG_Fuel_WM = X_CG_WM + d(i);
+        CG_Fuel_NM = X_CG_NM + d(i);
+    %Find Overall CG
+        CG_Overall_WM = (Wf*CG_Fuel_WM + W_Overall_WM*X_CG_WM)/(Wf + W_Overall_WM);
+        CG_Overall_NM = (Wf*CG_Fuel_NM + W_Overall_NM*X_CG_NM)/(Wf + W_Overall_NM);
+    %Find Static Margin
+        SM_Fuel_Sub_WM(i) = (X_NP_Sub-CG_Overall_WM*FL)/MAC; %with missiles
+        SM_Fuel_Sub_NM(i) = (X_NP_Sub-CG_Overall_NM*FL)/MAC; %without missiles
+        SM_Fuel_Super_WM(i) = (X_NP_Super-CG_Overall_WM*FL)/MAC; %with missiles
+        SM_Fuel_Super_NM(i) = (X_NP_Super-CG_Overall_NM*FL)/MAC; %with missiles
+    %Report
+        SM_Vector = [SM_Fuel_Sub_WM(i),SM_Fuel_Sub_NM(i),SM_Fuel_Super_WM(i),SM_Fuel_Super_NM(i)];
+        if sum(SM_Vector >= 0.1) == 1
+            Upper_Max = d_display(i);
+        end
+        if placeholder2 == 0
+            if any(SM_Vector <= -0.1)
+                Lower_Max = d_display(i);
+                placeholder2 = placeholder2 + 1;
+            end
+        end
+    %Update d
+        d(i+1) = d(i) + (Left_Bound + Right_Bound)/Steps;
+        d_display(i+1) = d_display(i) + (Left_Bound_Input + Right_Bound_Input)/Steps;
+end
+
+d(end) = [];
+d_display(end) = [];
+
+%Plot
+figure()
+hold on
+plot(d_display,SM_Fuel_Sub_WM,'LineWidth',1)
+plot(d_display,SM_Fuel_Sub_NM,'LineWidth',1)
+plot(d_display,SM_Fuel_Super_WM,'LineWidth',1)
+plot(d_display,SM_Fuel_Super_NM,'LineWidth',1)
+yline(0.1,'--k')
+yline(-0.1,'--k')
+yline(0,'k')
+xline(Lower_Max,'--r')
+xline(Upper_Max,'--r')
+ylabel('Static Margin')
+xlabel('Fuel CG Distance [m]')
+legend('Subsonic (w/ Missiles)','Subsonic (No Missiles)','Supersonic (w/ Missiles)','Supersonic (No Missiles)','Location','best')
 
 
 end
