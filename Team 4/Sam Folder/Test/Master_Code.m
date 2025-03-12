@@ -46,7 +46,11 @@ Ma_test = 0.9;
     Wg = Wg_calc(end); %Save last vector entry as converged gross weight
 
 %Run weight balance function
-[CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf);
+[CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display,Lower_Max,Upper_Max] = Weight_Balance(Wg,Ma_cruise,Wf);
+    %Report Lower and Upper Max (maximum fuel CG pertubation)
+    Lower_Max
+    Upper_Max
+
 
 %Find Fuel Volume
 Fuel_Volume = (Wf/9.81)/119.826;

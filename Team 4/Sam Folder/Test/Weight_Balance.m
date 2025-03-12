@@ -1,4 +1,4 @@
-function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf)
+function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display,Lower_Max,Upper_Max] = Weight_Balance(Wg,Ma_cruise,Wf)
 
 %% Global Parameters
 Ma = 1.6; %Design Mach Number
@@ -98,7 +98,7 @@ W_Weapons_NM = W_Gun; %No missiles
 %% Approximate Empty Weight Buildup
 
 %Finding wing centers of gravity
-CG_MW = X_MW + Y_MAC*tand(Sw_LE)/FL
+CG_MW = X_MW + Y_MAC*tand(Sw_LE)/FL;
 CG_HW = X_HT + Y_MAC_HT*tand(Sw_LE)/FL;
 CG_VW = X_VT + Y_MAC_VT*tand(Sw_LE)/FL;
 
@@ -120,8 +120,8 @@ W_tot = (W_Wing+W_Tail_H+W_Tail_V+W_Fus)*9.81 + W_LG + W_AEE + W_eng_i;
 
 CG_Empty = (9.81*(W_Wing*CG_MW + W_Tail_H*CG_HW + W_Tail_V*CG_VW + W_Fus*CG_FU)+W_LG*CG_LG+W_eng_i*CG_EN+W_AEE*0.5)/(W_tot);
 
-X_CG_WM = (W_Payload*CG_Payload + W_Weapons_WM*CG_Weapons_WM + W_tot*CG_Empty)/(W_Payload + W_Weapons_WM + W_tot) %overall CG with missiles
-X_CG_NM = (W_Payload*CG_Payload + W_Weapons_NM*CG_Weapons_NM + W_tot*CG_Empty)/(W_Payload + W_Weapons_NM + W_tot) %overall CG without missiles
+X_CG_WM = (W_Payload*CG_Payload + W_Weapons_WM*CG_Weapons_WM + W_tot*CG_Empty)/(W_Payload + W_Weapons_WM + W_tot); %overall CG with missiles
+X_CG_NM = (W_Payload*CG_Payload + W_Weapons_NM*CG_Weapons_NM + W_tot*CG_Empty)/(W_Payload + W_Weapons_NM + W_tot); %overall CG without missiles
 
 %% Aerodynamic Center
 
@@ -147,10 +147,10 @@ X_MAC_QC_VT = X_VT*FL + Y_MAC_VT*tand(Sw_LE) + MAC_VT/4; %Quarter chord of MAC f
 %% Neutral Point
 
 %Subsonic
-X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
+X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
 
 %Supersonic
-X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
+X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
 
 %% Converting to % of MAC from Leading Edge
 
@@ -172,12 +172,12 @@ NP_Super = abs(X_NP_Super-X_MAC_MW)/MAC;
 %% Static Margin
 
 %Subsonic
-SM_Sub_WM = (X_NP_Sub-X_CG_WM*FL)/MAC %with missiles
-SM_Sub_NM = (X_NP_Sub-X_CG_NM*FL)/MAC %without missiles
+SM_Sub_WM = (X_NP_Sub-X_CG_WM*FL)/MAC; %with missiles
+SM_Sub_NM = (X_NP_Sub-X_CG_NM*FL)/MAC; %without missiles
 
 %Supersonic
-SM_Super_WM = (X_NP_Super-X_CG_WM*FL)/MAC %with missiles
-SM_Super_NM = (X_NP_Super-X_CG_NM*FL)/MAC %without missiles
+SM_Super_WM = (X_NP_Super-X_CG_WM*FL)/MAC; %with missiles
+SM_Super_NM = (X_NP_Super-X_CG_NM*FL)/MAC; %without missiles
 
 %% Sensitivity Study (fuel weight)
 
