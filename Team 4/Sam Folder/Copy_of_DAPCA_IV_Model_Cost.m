@@ -155,3 +155,8 @@ disp(summaryTable)
 disp(operatingTable)
 disp(RDTable)
 
+%% FLY AWAY
+RDTandE_flyaway_entire = GFEC_M*Q+FF_General*( Ht_mks*Rt + Cm_mks + Hm_mks*Rm  +  2*Ceng_mks + Cavionics);
+fprintf('RDT&E Flyaway Cost for Entire Fleet: %.2f\n',RDTandE_flyaway_entire)
+RDTandE_flyaway_single = (GFEC_M*Q+FF_General*( Ht_mks*Rt + Cm_mks + Hm_mks*Rm  +  2*Ceng_mks + Cavionics) )/Q;
+fprintf('RDTandE Flyaway Cost for Single Aircraft: %.2f\n', RDTandE_flyaway_single);
