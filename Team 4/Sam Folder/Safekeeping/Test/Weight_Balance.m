@@ -1,4 +1,4 @@
-function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display,Lower_Max,Upper_Max] = Weight_Balance(Wg,Ma_cruise,Wf)
+function [CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf,Wfu)
 
 %% Global Parameters
 Ma = 1.6; %Design Mach Number
@@ -97,11 +97,6 @@ W_Weapons_NM = W_Gun; %No missiles
     
 %% Approximate Empty Weight Buildup
 
-%Finding wing centers of gravity
-CG_MW = X_MW + Y_MAC*tand(Sw_LE)/FL;
-CG_HW = X_HT + Y_MAC_HT*tand(Sw_LE)/FL;
-CG_VW = X_VT + Y_MAC_VT*tand(Sw_LE)/FL;
-
 %Approximate table values
 W_Wing = 44*S; %Wing mass [kg]
 W_Tail_H = 20*S_HT; %Horizontal tail mass [kg]
@@ -115,6 +110,29 @@ W_eng_i = 1.3*W_eng_o; %Installed engine weight [N]
 
 %Total weight check
 W_tot = (W_Wing+W_Tail_H+W_Tail_V+W_Fus)*9.81 + W_LG + W_AEE + W_eng_i;
+
+%Weight Table
+Component_Name = {'Wing Weight';'Vertical Tail Weight'; 'Fuselage Weight'; 'Landing Gear Weight';'Engine';'Horizontal Tail Weight'; 'Payload'; 'Weapons'; 'All Else Empty'};
+Component_Weight = [W_Wing*9.81; W_Tail_V*9.81; W_Fus*9.81; W_LG; W_eng_i; W_Tail_H*9.81; W_Payload; W_Weapons_WM; W_AEE];
+
+Column_Name = {'Parameter Name'; 'Value'};
+
+%Weight Charts
+Weight_Table = table(Component_Name,Component_Weight,'VariableNames',Column_Name);
+
+Weight_Table = table(Component_Name,Component_Weight);
+
+p = piechart(Weight_Table,"Component_Weight","Component_Name");
+
+% Modify font size for labels
+for i = 1:length(p)
+    if isprop(p(i), 'FontSize') % Check if it's a text object
+        p(i).FontSize = 16;  % Adjust font size as needed
+    end
+end
+
+p
+
 
 %% Empty Weight Center of Gravity
 
@@ -183,7 +201,7 @@ SM_Super_NM = (X_NP_Super-X_CG_NM*FL)/MAC; %without missiles
 
 Left_Bound_Input = 0.3; %[m]
     Left_Bound = Left_Bound_Input/FL; %Convert to percentage
-Right_Bound_Input = 0.3; %[m]
+Right_Bound_Input = 0.2; %[m]
     Right_Bound = Right_Bound_Input/FL; %Convert to percentage
 Steps = 1000;
 
@@ -227,10 +245,10 @@ d_display(end) = [];
 %Plot
 figure()
 hold on
-plot(d_display,SM_Fuel_Super_WM,'LineWidth',2)
-plot(d_display,SM_Fuel_Super_NM,'LineWidth',2)
-plot(d_display,SM_Fuel_Sub_WM,'LineWidth',2)
-plot(d_display,SM_Fuel_Sub_NM,'LineWidth',2)
+plot(d_display,SM_Fuel_Sub_WM,'LineWidth',1)
+plot(d_display,SM_Fuel_Sub_NM,'LineWidth',1)
+plot(d_display,SM_Fuel_Super_WM,'LineWidth',1)
+plot(d_display,SM_Fuel_Super_NM,'LineWidth',1)
 yline(0.1,'--k')
 yline(-0.1,'--k')
 yline(0,'k')
@@ -238,7 +256,93 @@ xline(Lower_Max,'--r')
 xline(Upper_Max,'--r')
 ylabel('Static Margin')
 xlabel('Fuel CG Distance [m]')
-legend('Supersonic (w/ Missiles)','Supersonic (No Missiles)','Subsonic (w/ Missiles)','Subsonic (No Missiles)','Location','best')
+legend('Subsonic (w/ Missiles)','Subsonic (No Missiles)','Supersonic (w/ Missiles)','Supersonic (No Missiles)','Location','best')
+title('100% Fuel Capacity')
+
+%% Sensitivity Study (sloshing)
+Steps = 1000;
+Fuel_Step = 100;
+
+W_Fuel(1) = (1/Fuel_Step)*Wf;
+FW_Display(1) = (1/Fuel_Step)*100;
+for j = 1:Fuel_Step
+
+d_WM(1) = -X_CG_WM; %start at 0% FL
+d_NM(1) = -X_CG_NM; %start at 0% FL
+d_display_WM(1) = d_WM(1)*FL;
+d_display_NM(1) = d_NM(1)*FL;
+placeholder1 = 0;
+placeholder2 = 0;
+for i = 1:Steps
+    %Find Fuel CG
+        CG_Fuel_WM = X_CG_WM + d_WM(i);
+        CG_Fuel_NM = X_CG_NM + d_NM(i);
+    %Find Overall CG
+        CG_Overall_WM = (W_Fuel(j)*CG_Fuel_WM + W_Overall_WM*X_CG_WM)/(W_Fuel(j) + W_Overall_WM);
+        CG_Overall_NM = (W_Fuel(j)*CG_Fuel_NM + W_Overall_NM*X_CG_NM)/(W_Fuel(j) + W_Overall_NM);
+    %Find Static Margin
+        SM_Fuel_Sub_WM(i) = (X_NP_Sub-CG_Overall_WM*FL)/MAC; %with missiles
+        SM_Fuel_Sub_NM(i) = (X_NP_Sub-CG_Overall_NM*FL)/MAC; %without missiles
+        SM_Fuel_Super_WM(i) = (X_NP_Super-CG_Overall_WM*FL)/MAC; %with missiles
+        SM_Fuel_Super_NM(i) = (X_NP_Super-CG_Overall_NM*FL)/MAC; %with missiles
+    %Report
+        SM_Vector = [SM_Fuel_Sub_WM(i),SM_Fuel_Sub_NM(i),SM_Fuel_Super_WM(i),SM_Fuel_Super_NM(i)];
+        %Find upper bound point
+        if placeholder1 == 0
+            if all(SM_Vector <= 0.1)
+                Upper_Limit(j) = d_display_WM(i);
+                placeholder1 = 1;
+            end
+        end
+        %Find lower bound point
+        if placeholder2 == 0
+            if any(SM_Vector <= -0.1)
+                Lower_Limit(j) = d_display_NM(i);
+                placeholder2 = 1;
+            end
+        end
+        
+    %Update d
+        d_WM(i+1) = d_WM(i) + 1/Steps;
+        d_NM(i+1) = d_NM(i) + 1/Steps;
+
+        d_display_WM(i+1) = d_WM(i+1)*FL;
+        d_display_NM(i+1) = d_NM(i+1)*FL;
+
+end
+
+%Update Fuel Weight
+W_Fuel(j+1) = W_Fuel(j) + (1/Fuel_Step)*Wf;
+FW_Display(j+1) = FW_Display(j) + (1/Fuel_Step)*100;
+end
+
+%Vector Adjustment
+FW_Display(end) = [];
+
+%plot
+figure()
+hold on
+plot(FW_Display,Upper_Limit,'LineWidth',2)
+plot(FW_Display,Lower_Limit,'LineWidth',2)
+yline(0,'k')
+xline(50,'--k')
+xline(100*Wfu(end)/Wf,'--k')
+fill([FW_Display, fliplr(FW_Display)],[Upper_Limit,fliplr(Lower_Limit)], 'b', 'FaceAlpha', 0.3, 'EdgeColor', 'none')
+xlabel('Fuel Amount [%]')
+ylabel('Distance from Empty CG [m]')
+legend('Forewards Limit','Backwards Limit')
+
+% Define the rectangle coordinates
+x_rect = [0, 1, 1, 0]; % X coordinates
+y_rect = [-10, -10, 4, 4]; % Y coordinates
+
+% Create figure and fill the rectangle
+hold on;
+h = fill(x_rect, y_rect, 'b', 'FaceAlpha', 0.3, 'EdgeColor', 'none'); % Match previous transparency
+hold off;
+
+% Remove from legend
+set(get(get(h, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
 
 
 end
