@@ -1,4 +1,4 @@
-function [Wg_calc,EWF,Wf,Flight_Time] = gross_weight(n_missile,n_eng,AR,T2W,WL,TSFC_cruise,TSFC_dash,L2D_cruise,L2D_dash,Ma_cruise,v_cruise,v_dash,a_dash,n_max,T2W_dash)
+function [Wg_calc,EWF,Wf,Flight_Time,Wfu] = gross_weight(n_missile,n_eng,AR,T2W,WL,TSFC_cruise,TSFC_dash,L2D_cruise,L2D_dash,Ma_cruise,v_cruise,v_dash,a_dash,n_max,T2W_dash)
 
 %% Standard Parameters
 Ma = 1.6; %Design Mach Number

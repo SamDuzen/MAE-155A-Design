@@ -71,6 +71,7 @@ Column_Name = {'Parameter Name'; 'Symbol'; 'Value'};
 
 Wing_Table = table(Parameter_Name, Parameter_Symbol, Parameter_Value,'VariableNames',Column_Name);
 
+
 %% Export Data
 writematrix(Parameter_Value,'Wing_Parameters.csv')
 
