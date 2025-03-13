@@ -1,0 +1,39 @@
+Number of Missiles	4
+Number of Engines	2
+Cruise Mach Number	0.85
+Oswald Efficiency Factor	0.7
+Oswald Efficiency Factor (Combat)	0.7
+Maximum Load Factor	7
+	
+Wing Loading	3640
+Wing Loading (Cruise)	3640
+Wing Loading (Dash)	3640
+Thrust-to-Weight Ratio	0.56
+Thrust-to-Weight Ratio (Dash)	0.56
+	
+Thrust Specific Fuel Consumption	0.71
+Thrust Specific Fuel Consumption (Cruise)	0.71
+Thrust Specific Fuel Consumption (Dash)	0.71
+	
+Parasitic Drag Coefficient (Cruise)	0.0468
+Parasitic Drag Coefficient (Dash)	0.0493
+Lift Coefficient Slope (Main Wing)	5.7296
+Lift Coefficient Slope (Horizontal Tail)	5.7296
+Lift Coefficient Slope (Vertical Tail)	4.2972
+	
+Leading Edge of Main Wing [%]	0.25
+Leading Edge of Horizontal Wing [%]	0.8
+Leading Edge of Vertical Wing [%]	0.8
+Main Wing Center of Gravity	0.45
+Horizontal Wing Center of Gravity	0.8832
+Vertical Wing Center of Gravity	0.8864
+Fuselage Center of Gravity	0.55
+Engine Center of Gravity	0.8
+Landing Gear Center of Gravity	0.7
+	
+Fuselage Length [m]	16.5
+Fuselage Wetted Area [m^2]	36.1
+	
+Dry Engine Weight [N]	9804
+Engine Thrust [lbf] - Base	27000
+Engine Thrust [lbf] - Afterburners	40000
