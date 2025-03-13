@@ -165,10 +165,10 @@ X_MAC_QC_VT = X_VT*FL + Y_MAC_VT*tand(Sw_LE) + MAC_VT/4; %Quarter chord of MAC f
 %% Neutral Point
 
 %Subsonic
-X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
+X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
 
 %Supersonic
-X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
+X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
 
 %% Converting to % of MAC from Leading Edge
 
