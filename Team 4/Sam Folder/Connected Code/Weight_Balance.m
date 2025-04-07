@@ -79,7 +79,7 @@ end
 W_APU = 100*4.44822;
 
 CG_Payload = (W_ICNIA*X_ICNIA + W_DataBus*X_DataBus + W_INEWS*X_INEWS + W_VMS*X_VMS + W_IRSTS*X_IRSTS + W_AAR*X_AAR + W_ES*X_ES + W_APU*X_APU)/(W_ICNIA + W_DataBus + W_INEWS + W_VMS + W_IRSTS + W_AAR + W_ES + W_APU);
-CG_Payload = CG_Payload/FL; %Nondimensionalize
+CG_Payload = CG_Payload/FL %Nondimensionalize
 W_Payload = W_ICNIA + W_DataBus + W_INEWS + W_VMS + W_IRSTS + W_AAR + W_ES + W_APU;
 
 %% Weapons
@@ -89,7 +89,7 @@ W_Gun = (300+275)*4.44822;
 X_Missiles = CG_MW;
 W_Missiles = 327*n_missile*4.44822;
 
-CG_Weapons_WM = (W_Gun*X_Gun + W_Missiles*X_Missiles)/(W_Gun + W_Missiles); %With missiles
+CG_Weapons_WM = (W_Gun*X_Gun + W_Missiles*X_Missiles)/(W_Gun + W_Missiles) %With missiles
 CG_Weapons_NM = X_Gun; %No missiles
 
 W_Weapons_WM = W_Gun + W_Missiles; %With missiles
@@ -136,7 +136,7 @@ p
 
 %% Empty Weight Center of Gravity
 
-CG_Empty = (9.81*(W_Wing*CG_MW + W_Tail_H*CG_HW + W_Tail_V*CG_VW + W_Fus*CG_FU)+W_LG*CG_LG+W_eng_i*CG_EN+W_AEE*0.5)/(W_tot);
+CG_Empty = (9.81*(W_Wing*CG_MW + W_Tail_H*CG_HW + W_Tail_V*CG_VW + W_Fus*CG_FU)+W_LG*CG_LG+W_eng_i*CG_EN+W_AEE*0.5)/(W_tot)
 
 X_CG_WM = (W_Payload*CG_Payload + W_Weapons_WM*CG_Weapons_WM + W_tot*CG_Empty)/(W_Payload + W_Weapons_WM + W_tot); %overall CG with missiles
 X_CG_NM = (W_Payload*CG_Payload + W_Weapons_NM*CG_Weapons_NM + W_tot*CG_Empty)/(W_Payload + W_Weapons_NM + W_tot); %overall CG without missiles
@@ -165,10 +165,10 @@ X_MAC_QC_VT = X_VT*FL + Y_MAC_VT*tand(Sw_LE) + MAC_VT/4; %Quarter chord of MAC f
 %% Neutral Point
 
 %Subsonic
-X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
+X_NP_Sub = (dCL_MW*S*X_AC_MW_Sub + dCL_HT*S_HT*X_AC_HT_Sub + dCL_VT*S_VT*X_AC_VT_Sub)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
 
 %Supersonic
-X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT);
+X_NP_Super = (dCL_MW*S*X_AC_MW_Super + dCL_HT*S_HT*X_AC_HT_Super + dCL_VT*S_VT*X_AC_VT_Super)/(dCL_MW*S + dCL_HT*S_HT + dCL_VT*S_VT)
 
 %% Converting to % of MAC from Leading Edge
 
@@ -245,19 +245,31 @@ d_display(end) = [];
 %Plot
 figure()
 hold on
-plot(d_display,SM_Fuel_Sub_WM,'LineWidth',1)
-plot(d_display,SM_Fuel_Sub_NM,'LineWidth',1)
-plot(d_display,SM_Fuel_Super_WM,'LineWidth',1)
-plot(d_display,SM_Fuel_Super_NM,'LineWidth',1)
-yline(0.1,'--k')
-yline(-0.1,'--k')
+plot(d_display,100*SM_Fuel_Sub_WM,'LineWidth',1)
+plot(d_display,100*SM_Fuel_Sub_NM,'LineWidth',1)
+plot(d_display,100*SM_Fuel_Super_WM,'LineWidth',1)
+plot(d_display,100*SM_Fuel_Super_NM,'LineWidth',1)
+yline(10,'--k','LineWidth',2)
+yline(-10,'--k','LineWidth',2)
 yline(0,'k')
-xline(Lower_Max,'--r')
-xline(Upper_Max,'--r')
-ylabel('Static Margin')
-xlabel('Fuel CG Distance [m]')
+xline(Lower_Max,'--r','LineWidth',2)
+xline(Upper_Max,'--r','LineWidth',2)
+ylabel('Static Margin [%]')
+xlabel('\DeltaCG [m]')
 legend('Subsonic (w/ Missiles)','Subsonic (No Missiles)','Supersonic (w/ Missiles)','Supersonic (No Missiles)','Location','best')
 title('100% Fuel Capacity')
+
+% Define the rectangle coordinates
+x_rect = [Lower_Max, Upper_Max, Upper_Max, Lower_Max]; % X coordinates
+y_rect = [-10, -10, 10, 10]; % Y coordinates
+
+% Create figure and fill the rectangle
+hold on;
+h = fill(x_rect, y_rect, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'none'); % Match previous transparency
+hold off;
+
+% Remove from legend
+set(get(get(h, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
 
 %% Sensitivity Study (sloshing)
 Steps = 1000;
@@ -327,7 +339,7 @@ plot(FW_Display,Lower_Limit,'LineWidth',2)
 yline(0,'k')
 xline(50,'--k')
 xline(100*Wfu(end)/Wf,'--k')
-fill([FW_Display, fliplr(FW_Display)],[Upper_Limit,fliplr(Lower_Limit)], 'b', 'FaceAlpha', 0.3, 'EdgeColor', 'none')
+fill([FW_Display, fliplr(FW_Display)],[Upper_Limit,fliplr(Lower_Limit)], 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'none')
 xlabel('Fuel Amount [%]')
 ylabel('Distance from Empty CG [m]')
 legend('Forewards Limit','Backwards Limit')
@@ -338,7 +350,7 @@ y_rect = [-10, -10, 4, 4]; % Y coordinates
 
 % Create figure and fill the rectangle
 hold on;
-h = fill(x_rect, y_rect, 'b', 'FaceAlpha', 0.3, 'EdgeColor', 'none'); % Match previous transparency
+h = fill(x_rect, y_rect, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'none'); % Match previous transparency
 hold off;
 
 % Remove from legend
