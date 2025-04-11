@@ -10,12 +10,17 @@ cWg = 6.74*10^1; %Cost per unit gross weight
 c_f = 5.56*10^(-5); %Cost (FOC) per unit flight-time
 t_l = 3.60*10^6; %Total flight time in aircraft life
 
+%% Loop Start
+loops = 500;
+figure()
+for j = 1:loops
+
 %% Scoring Parameter Initialization
-Wp = 10; %Package 1 weight
-Vp = 10; %Package 2 volume
-Ef = 10; %Energy consumption
-Wg = 10; %Gross weight
-Tf = 10; %Flight time
+Wg = 22.8571; %Gross weight [N]
+Wp = Wg - 0.65*Wg; %Package 1 weight
+Vp = 0.0005 + j*0.02/loops;
+Ef = 10^6; %Energy consumption
+Tf = 6*60*20; %Flight time [s]
 
 %% Sensitivity Initialization
 vary = -0.3:0.001:0.3;
@@ -58,13 +63,21 @@ for i = 1:length(vary)
 end
 
 %% Plotting
-figure()
-hold on
 plot(100*vary,100*Sens_Wp_norm)
+hold on
 plot(100*vary,100*Sens_Vp_norm)
 plot(100*vary,100*Sens_Ef_norm)
 plot(100*vary,100*Sens_Wg_norm)
 plot(100*vary,100*Sens_Tf_norm)
-legend('Package 1 Weight','Package 2 Volume','Energy Consumption','Gross Weight','Flight Time')
+legend('Package 1 Weight','Package 2 Volume','Energy Consumption','Gross Weight','Flight Time','Location','best')
+xlabel('Percent Change in Scoring Parameter')
+ylabel('Percent Change in Score')
 grid on
+title(['Vp = ', num2str(Vp),' m^3' ,' | ',' J = ',num2str(J_base),'  |', '  (', num2str(j), '/', num2str(loops), ')'])
+ylim([-60,60])
+hold off
+
+%% Loop end
+drawnow
+end
 
