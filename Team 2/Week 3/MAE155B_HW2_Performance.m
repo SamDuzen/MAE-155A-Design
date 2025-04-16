@@ -1,17 +1,26 @@
 %% Takeoff Analysis 
 
 %Necessary values from Aerodynamics section
-Clmax = 1.5;
+Clmax = 1.47;
 %S = ; %Wing area in  [m^2]
 Wo = 13.6;  %Gross weight [N]
-D = 5 ; %Drag force at 70% Vto and angle of attack = 0 [N]
+Cdto = 0.01 ; %Drag force at 70% Vto and angle of attack = 0 [N]
 %T =  ; %Thrust force at 70% Vto and angle of attack = 0 (From Prop section) [N]
 
 % Approximated/Guessed values for now
 WingLoading = 48*2.75; %Wing loading estimate from lecture, typical RC wing loading 1-3 lb/sqft, and conversion into N/m2 is multiplied by 48 [N/m^2]
 S = Wo/WingLoading ; %Wing area by optimized gross weight and reference wing loading [m^2]
 T = 0.998*9.81; %APC 9x4.5-E propeller Thrust [N]
-L = Wo*0.8;
+AR = 5; % Aspect ratio
+e = 0.8; % Oswald efficiency
+
+%Cd calculation
+alpha0 = -6; %Zero lift angle of attack [deg]
+dldalpha = 1.2/12; % Rise over run approximation of 
+Cl = 0.6; %Cl at 0 AoA from Sam's charts
+Cdo = 0.01; % parasitic drag (zero lift) drag coefficient
+K = 1/(pi*e*AR); 
+Cd= Cdo + K*Cl^2;
 
 %Constants
 P = 101280; % Pressure in [Pa] 
@@ -23,6 +32,8 @@ Fc = 0.03; % Coefficient of rolling friction
 % Calculations
 Clto = Clmax*0.8; % Take off lift coefficient
 Vto = sqrt(2*Wo/(Clto*rho*S)); 
+L = 0.5*rho*(Clto)*S*(Vto*0.7)^2;
+D = 0.5*rho*(Cd)*S*(Vto*0.7)^2;
 amean = (g/Wo)*((T-D) - Fc*(Wo-L));
 Sto = (Vto^2)/(2*amean); % Take off distance in [m]
 
