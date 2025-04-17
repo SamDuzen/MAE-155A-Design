@@ -11,11 +11,11 @@ c_f = 5.56*10^(-5); %Cost (FOC) per unit flight-time
 t_l = 3.60*10^6; %Total flight time in aircraft life
 
 %% Scoring Parameter Initialization
-Wp = 12.7052; %Package 1 weight
-Vp = 0.001; %Package 2 volume [m^3]
-Ef = 8.5160e+04; %Energy consumption
-Wg = 36.3006; %Gross weight [N]
-Tf = 1.4405e+03; %Flight time [s]
+Wp = 7.7804; %Package 1 weight
+Vp = 9.9806e-04; %Package 2 volume [m^3]
+Ef = 6.1988e+04; %Energy consumption
+Wg = 22.2297; %Gross weight [N]
+Tf = 1.4411e+03; %Flight time [s]
 
 %% Sensitivity Initialization
 vary = -0.3:0.001:0.3;
