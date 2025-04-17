@@ -45,9 +45,10 @@ Ma_test = 0.9;
 [Wg_calc,EWF,Wf,Flight_Time,Wfu] = gross_weight(n_missile,n_eng,AR,T2W,WL,TSFC_cruise,TSFC_dash,L2D_cruise,L2D_dash,Ma_cruise,v_cruise,v_dash,a_dash,n_max,T2W_dash);
     Wg = Wg_calc(end); %Save last vector entry as converged gross weight
 
-%Run weight balance function
-[CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf,Wfu);
-
 %Find Fuel Volume
 Fuel_Volume = (Wf/9.81)/119.826;
+
+
+%Run weight balance function
+[CG_WM,CG_NM,X_CG_WM,X_CG_NM,NP_Sub,NP_Super,SM_Sub_WM,SM_Sub_NM,SM_Super_WM,SM_Super_NM,d_display] = Weight_Balance(Wg,Ma_cruise,Wf,Wfu);
 
