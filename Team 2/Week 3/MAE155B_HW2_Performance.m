@@ -49,42 +49,65 @@ J10000 = K10(:,2);
 Ct10000 = K10(:,4);
 Thrust = rho .* (n^2) .* (P_diam^4) .*Ct10000;
 Velocity = P_diam .* n .* J10000;
+V = linspace(3, 45, 421);
+% % === Aerodynamic values from Seans workspace ===
+% CL_cruise = 0.25535;
+% CD_cruise = 0.0538775;
+% K = 0.0011;
+% CD0 = CD_cruise - K * CL_cruise^2;  % compute CD0 from drag polar
+% 
+% 
+% % === DYNAMIC DRAG MODEL ===
+% CL = (2 * Wo) ./ (rho * Velocity.^2 * S);
+% CD = CD0 + K * CL.^2;
 
-% === Aerodynamic values from Seans workspace ===
-CL_cruise = 0.25535;
-CD_cruise = 0.0538775;
+%Cl Calculation
+CL = (2.*Wo)./(rho .* S .* Velocity.^2) ; % Coefficient of lift necessary to maintain lift at each V
 K = 0.0011;
-CD0 = CD_cruise - K * CL_cruise^2;  % compute CD0 from drag polar
+CL_min = -0.6174;
+CD = 0.01 + K.*(CL-CL_min).^2 + + CL.^2/(pi*e*AR);
 
-
-% === DYNAMIC DRAG MODEL ===
-CL = (2 * Wo) ./ (rho * Velocity.^2 * S);
-CD = CD0 + K * CL.^2;
 D = 0.5 * rho .* Velocity.^2 * S .* CD;
-
+% O = length(Velocity);
+% for k= 1:O
+%     if D(k) > Thrust(k) && Velocity(K)<15
+%         D(k) =      Thrust(k);
+%     end
+% end
 % === FIND CRUISE POINT (T = D) ===
 diff = Thrust - D;
-idx_cross = find(diff(1:end-1) .* diff(2:end) < 0, 1);
+idx_cross = find(diff(1:end-1) .* diff(2:end) < 0, 1,"last");
 V1 = Velocity(idx_cross); V2 = Velocity(idx_cross+1);
 T1 = Thrust(idx_cross); T2 = Thrust(idx_cross+1);
 D1 = D(idx_cross); D2 = D(idx_cross+1);
 V_cruise = V1 + (V2 - V1) * (T1 - D1) / ((T1 - D1) - (T2 - D2));
 T_cruise = interp1(Velocity, Thrust, V_cruise);
-pct_thrust = T_cruise / max(T) * 100;
-
-
+nom_pct_thrust = 1.4389 / 11.5899 * 100;
 
 
 figure;
 plot(Velocity, Thrust, 'r-', 'LineWidth', 2); hold on;
-plot(Velocity, D, 'b--', 'LineWidth', 2);hold on;
+plot(Velocity, D, 'b-', 'LineWidth', 2);hold on;
+xline(24, 'k--', 'LineWidth', 2); hold on
 plot(V_cruise, T_cruise, 'ko', 'MarkerFaceColor', 'g', 'DisplayName', 'Cruise Point');
 xlabel('Velocity (m/s)');
 ylabel('Force (N)');
-legend('Thrust', 'Drag', 'Cruise point')
+ylim([0 25])
+legend('Thrust', 'Drag','Cruise Speed', 'Maximum Speed point')
 title('Thrust and Drag vs Velocity plot of APC 9x6E propeller')
 grid on
 
+pct_thrust = D./Thrust *100;
+figure;
+plot(Velocity,pct_thrust, 'k-', 'LineWidth', 2); hold on
+plot(24,nom_pct_thrust,'ko', 'MarkerFaceColor', 'r')
+xlim([10 max(Velocity)]);
+ylim([0 100])
+legend('Required thrust percentage','Nominal Cruise Speed point (12.41%)', Location='nw')
+xlabel('Velocity (m/s)');
+ylabel('Percentage of Thrust')
+title('Percentage of maximum thrust needed for level flight');
+grid on
 
 %% Cl vs V plot 
 
@@ -105,17 +128,21 @@ V = linspace(10, 45, 351);% Velocity range for plotting from 6 to 30 with 0.1 st
 %Cl Calculation
 CL = (2.*Wo)./(rho .* S .* V.^2) ; % Coefficient of lift necessary to maintain lift at each V
 
+K = 0.0011;
+CL_min = -0.6174;
+CD = 0.01 + K.*(CL-CL_min).^2 + + CL.^2/(pi*e*AR);
 
 % Plot
 figure;
 plot(V, CL, 'b-', 'LineWidth', 2); hold on;
 xline(Vstall, 'r--','LineWidth', 2); hold on
 xline(Vto, 'k--', 'LineWidth',2); hold on;
-xline(Vmax, 'g--', 'LineWidth',2); hold on;
-xline(V_cruise, 'b--', 'LineWidth',2); 
+xline(V_cruise, 'g--', 'LineWidth',2); hold on;
+xline(24, 'b--', 'LineWidth',2); 
 xlabel('Velocity (m/s)');
 ylabel('Coefficient of Lift');
 legend('Cl', 'Stall Speed', 'Take off Speed', 'Maximum Speed','Nominal Cruise Speed');
 title('Cl necessary to maintain steady level flight for varying speeds');
 xlim([min(V) max(V)])
-grid minor;
+grid on;
+
